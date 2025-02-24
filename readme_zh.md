@@ -7,7 +7,7 @@
 </p>
 <div align="center">
   
-[📖 Arxiv]() |
+[📖 Arxiv](https://arxiv.org/abs/2502.14913) |
 中文版 |
 [英文版]()
 

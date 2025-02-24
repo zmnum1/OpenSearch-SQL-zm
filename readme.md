@@ -5,7 +5,7 @@ A comprehensive Text-to-SQL framework that achieved first place on [BIRD](https:
 </p>
 <div align="center">
   
-[📖 Arxiv]() |
+[📖 Arxiv](https://arxiv.org/abs/2502.14913) |
 [中文版](./readme_zh.md) |
 英文版
 
