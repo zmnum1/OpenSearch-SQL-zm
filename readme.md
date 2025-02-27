@@ -59,3 +59,15 @@ You can also use the fewshot data directly from the Bird path.
    sh run/run_main.sh  # ，path：src/runner/database_manager.py-> _set_paths
    ```
    
+## 8. Citation
+```
+@misc{xie2025opensearchsqlenhancingtexttosqldynamic,
+      title={OpenSearch-SQL: Enhancing Text-to-SQL with Dynamic Few-shot and Consistency Alignment}, 
+      author={Xiangjin Xie and Guangwei Xu and Lingyan Zhao and Ruijie Guo},
+      year={2025},
+      eprint={2502.14913},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/2502.14913}, 
+}
+```
