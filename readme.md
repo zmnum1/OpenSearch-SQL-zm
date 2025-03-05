@@ -29,7 +29,7 @@ OpenSearch-SQL consists of modules for Preprocessing, Extraction, Generation, Re
 
 In addition to Schema Linking, Beam Search sampling to generate answers, and Self-Consistency & voting, we have achieved performance improvements through our unique framework design.
 
-1. In OpenSearch-SQL, we introduced for the first time a self-taught CoT (Chain of Thought) supplementation method that expands Query-SQL Pair form into Query-CoT-SQL Pair, significantly improving model performance.
+1. In OpenSearch-SQL, we introduced for the first time a self-taught CoT (Chain of Thought) augmentation method, which extends the few-shot format from Query-SQL Pair to Query-CoT-SQL Pair. This significantly enhances the model's performance. It is worth mentioning that a few-shot example that is more similar to the query is not necessarily more helpful for model generation. I hope this is useful to you.
 2. We designed a structured CoT approach specifically for the Text-to-SQL task and devised a SQL-Like intermediate language to optimize SQL generation.
 3. Moreover, we introduced for the first time an Alignment approach to align the input and output of the Agent, which alleviates the issue of model hallucination. This includes:
 Different styles required by different datasets

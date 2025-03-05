@@ -36,7 +36,7 @@ OpenSearch-SQL 通过 Preprocessing、Extraction、Generation、Refinement 以�
 
 除了 Schemelinking、BeamSearch 采样生成答案和 Self-Consistnecy \& vote 之外，我们依赖独特的框架设计取得了效果的提升。
 
-1. 在 OpenSearch-SQL 中，我们第一次提出了 Self-taught 的 CoT 补充方法，将 Query-SQL Pair 形式的 Few-shot 扩展成 Query-CoT-SQL Pair，这大大提升了模型表现。
+1. 在 OpenSearch-SQL 中，我们第一次提出了 Self-taught 的 CoT 补充方法，将 Query-SQL Pair 形式的 Few-shot 扩展成 Query-CoT-SQL Pair，这大大提升了模型表现。另外，我们发现，与query更相似的few-shot不一定对模型的表现更有帮助。希望这对你的研究有帮助
 2. 我们为 Text-to-SQL 人物设计了一种结构化的 CoT 思路，并设计了 SQL-Like 的中间语言来优化 SQL 生成
 3. 除此之外，我们第一次提出了 Alignment 方法，将 Agent 的输入输出进行对齐，这缓解了模型幻觉的问题。
    例如：不同数据集的风格要求、Agent 信息传递的幻觉、生成 SQL 的基本逻辑问题
