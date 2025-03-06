@@ -29,14 +29,14 @@ def generate_db_schema(task: Any, execution_history: Dict[str, Any]) -> Dict[str
         with open(ext_file, 'r') as f:
             data = json.load(f)#保存格式错了
     else:
-        data =[]
+        data ={}
 
     # 获取数据库信息代理
     DB_info_agent = db_agent_string(chat_model)
     
     # 检查是否已处理该数据库
     db = task.db_id
-    existing_entry = data[db]
+    existing_entry = data.get(db)
 
     if existing_entry:
         all_info,db_col = existing_entry

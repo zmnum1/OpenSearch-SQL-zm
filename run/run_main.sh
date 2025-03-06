@@ -6,8 +6,8 @@ end=1  #开区间
 pipeline_nodes='generate_db_schema+extract_col_value+extract_query_noun+column_retrieve_and_other_info+candidate_generate+align_correct+vote+evaluation'
 # pipeline_nodes='column_retrieve_and_other_info'
 # pipeline指当前工作流的节点组合
-checkpoint_nodes='generate_db_schema,extract_col_value,extract_query_noun'
-checkpoint_dir="./results/dev/generate_db_schema+extract_col_value+extract_query_noun+column_retrieve_and_other_info+candidate_generate+align_correct+vote+evaluation/Bird/2024-09-12-01-48-10"
+# checkpoint_nodes='generate_db_schema,extract_col_value,extract_query_noun'
+# checkpoint_dir="./results/dev/generate_db_schema+extract_col_value+extract_query_noun+column_retrieve_and_other_info+candidate_generate+align_correct+vote+evaluation/Bird/2024-09-12-01-48-10"
 
 # Nodes:
     # generate_db_schema
