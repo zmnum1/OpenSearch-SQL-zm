@@ -894,7 +894,7 @@ SQL: SELECT COUNT(DISTINCT T1.orderNumber) FROM orderdetails AS T1 INNER JOIN or
 
 #Now, you need to process the question content based on the evidence and SQL:
 1. Standardize the question into a format that aligns more closely with SQL, in order to clearly reflect components: SELECT, WHERE, GROUP BY, ORDER BY, etc.
-2. provide the SQL query result set (the SELECT part in SQL, requested columns by the question), candidate columns for the question, and extract all values from the query according to the database information. Please list the query result set in the format of table.column after "#SELECT", list relevant candidate columns in the format of table.field after "#columns". List the values the question want to query after "#values". Use a comma "," to separate values and columns, and separate columns and values with a tab. The text format you will receive is ```question: {{question}}\evidence:{{define or evidence}}\nSQL:{{SQL}}\n#answer:```, and the output format you need to provide is #reason:{{why pick query, columns and values}}\n#SELECT:{{which to SELECT}}\n#columns:{{related columns}}\n#values:{{values}} #Standardization question:{{}}
+2. provide the SQL query result set (the SELECT part in SQL, requested columns by the question), candidate columns for the question, and extract all values from the query according to the database information. Please list the query result set in the format of table.column after "#SELECT", list relevant candidate columns in the format of table.field after "#columns". List the values the question want to query after "#values". Use a comma "," to separate values and columns, and separate columns and values with a tab. The text format you will receive is ```question: {{question}}\evidence:{{define or evidence}}\nSQL:{{SQL}}\n#answer:```, and the output format you need to provide is #reason:{{why pick query, columns and values}}\n#SELECT:{{which to SELECT}}\n#columns:{{related columns}}\n#values:{{values}} #Standardization question:{{}}\n#SQL-like: SQL-like statements that ignore join conditions
 Now, you need to process the following text:
 
 #question: {question}
@@ -908,8 +908,8 @@ prompts_fewshot_parse2="""/* extract and rewrite example */
 SQL: SELECT T3.name, T2.f_name, T2.l_name FROM registration AS T1 INNER JOIN student AS T2 ON T1.student_id = T2.student_id INNER JOIN course AS T3 ON T1.course_id = T3.course_id WHERE T1.grade = 'A' GROUP BY T3.name ORDER BY COUNT(T1.student_id) DESC LIMIT 1
 #reason: The question requires display in order: "name of the course", "full name"."A" is filtering condition.
 #columns: course.name, student.f_name, student.l_name, registration.grade, registration.student_id
-#values: got an A refers to registration.grade = 'A'
 #SELECT: "name of the course" refer to course.name, "full name" refer to student.f_name, student.l_name
+#values: got an A refers to registration.grade = 'A'
 #SQL-like: Show course.name, student.f_name, student.l_name, where registration.grade = 'A' , group by course.name, order by the number of T1.student_id
 
 /* extract and rewrite example */
@@ -917,8 +917,8 @@ SQL: SELECT T3.name, T2.f_name, T2.l_name FROM registration AS T1 INNER JOIN stu
 SQL: SELECT SUM(CASE WHEN T1.episode = 1 THEN T2.votes ELSE 0 END) - SUM(CASE WHEN T1.episode = 5 THEN T2.votes ELSE 0 END) AS diff FROM Episode AS T1 INNER JOIN Vote AS T2 ON T2.episode_id = T1.episode_id;
 #reason: The question requires display in order: "How much more vote". The definition of "more vote" is SUBTRACT(SUM(votes when episode = 1), SUM(votes when episode = 5)). 1, 5 are filtering conditions.
 #columns: Episode.episode, Vote.votes
-#values:  episode 1 refer to Episode.episode = 1,  episode 5 refer to Episode.episode = 5
 #SELECT: more votes for episode 1 than for episode 5 refer to SUBTRACT(SUM(votes when episode = 1), SUM(votes when episode = 5))
+#values:  episode 1 refer to Episode.episode = 1,  episode 5 refer to Episode.episode = 5
 #SQL-like: Show SUBTRACT(SUM(votes when episode = 1), SUM(votes when episode = 5))
 
 /* extract and rewrite example */
@@ -926,8 +926,8 @@ SQL: SELECT SUM(CASE WHEN T1.episode = 1 THEN T2.votes ELSE 0 END) - SUM(CASE WH
 SQL: SELECT SUM(T1.rating_score) / COUNT(T1.rating_id) FROM ratings AS T1 INNER JOIN movies AS T2 ON T1.movie_id = T2.movie_id WHERE T1.rating_timestamp_utc LIKE '2019%' AND T2.movie_title LIKE 'The Fall of Berlin'
 #reason: The question requires display in order: "average score". Average score is Avg(rating_score), "The Fall of Berlin",2019 are filtering conditions.
 #columns: ratings.rating_score, ratings.rating_id, ratings.rating_timestamp_utc, movies.movie_title
-#values: 'The Fall of Berlin' refer to movies.movie_title = 'The Fall of Berlin', 2019 refer to ratings.rating_timestamp_utc = 2019
 #SELECT: average score refer to Avg(rating_score)
+#values: 'The Fall of Berlin' refer to movies.movie_title = 'The Fall of Berlin', 2019 refer to ratings.rating_timestamp_utc = 2019
 #SQL-like: Show Avg(rating_score), where ratings.rating_timestamp_utc = 2019 and movies.movie_title = 'The Fall of Berlin'
 
 /* extract and rewrite example */
@@ -935,15 +935,15 @@ SQL: SELECT SUM(T1.rating_score) / COUNT(T1.rating_id) FROM ratings AS T1 INNER 
 SQL: SELECT COUNT(DISTINCT T1.orderNumber) FROM orderdetails AS T1 INNER JOIN orders AS T2 ON T1.orderNumber = T2.orderNumber WHERE T1.quantityOrdered < 30 AND STRFTIME('%Y', T2.orderDate) = '2003'
 #reason:  The question requires display in order: "How many distinct orders". " in 2003", "less than 30" are filtering conditions.
 #columns: orderdetails.orderNumber, orderdetails.quantityOrdered, orders.orderDate
-#values: 30 refer to quantityOrdered < 30, 2003 refer to year(orderDate) = '2003'
 #SELECT: How many distinct orders refer to COUNT(DISTINCT orderdetails.orderNumber)
+#values: 30 refer to quantityOrdered < 30, 2003 refer to year(orderDate) = '2003'
 #SQL-like: Show COUNT(DISTINCT orderdetails.orderNumber), where orders.orderDate = 2003 and orderdetails.quantityOrdered < 30
 
 #Please provide answer based on the requirements below using the provided questions and SQL:
 1. After #reason, follow the example above to analyze how to generate SQL based on question.
 2. After #columns, Provide candidate columns for the question generate SQL
-3. After #values, provide the filtering conditions that exist in SQL
-4. After #SELECT, provide the content that SQL should display in order
+3. After #SELECT, provide the content that SQL should display in order
+4. After #values, provide the filtering conditions that exist in SQL
 5. After #SQL-like, rewrite the question to SQL-like in the format: "Show #SELECT (table.column), WHERE condition are xxx (refer to #values), Group by/Order By (refer to columns)
 6. The text format you will receive is:
 ```
@@ -953,8 +953,8 @@ Please respond in the following format without any other content:
 ``` 
 #reason: Analyze how to generate SQL based on the question.
 #columns: All columns ultimately used in SQL
-#values: the filtering conditions that exist in SQL 
 #SELECT: the content that SQL should display in order
+#values: the filtering conditions that exist in SQL 
 #SQL-like: SQL-like statements that ignore join conditions
 ```
 
@@ -963,6 +963,57 @@ Now, you need to process the following text:
 SQL: {sql}
 #answer:
 """
+
+prompts_fewshot_parse3="""/* extract and rewrite example */
+#question: Please give the name of the course in which most numbers of the students got an A. Also, list the full name of the students who got an A in this course. most number of students got an A refers MAX(COUNT(student_id WHERE grade = 'A')); full name = f_name, l_name; got an A refers to grade = 'A';
+SQL: SELECT T3.name, T2.f_name, T2.l_name FROM registration AS T1 INNER JOIN student AS T2 ON T1.student_id = T2.student_id INNER JOIN course AS T3 ON T1.course_id = T3.course_id WHERE T1.grade = 'A' GROUP BY T3.name ORDER BY COUNT(T1.student_id) DESC LIMIT 1
+#reason: The question requires display in order: "name of the course", "full name"."A" is filtering condition.
+#SELECT: course.name, student.f_name, student.l_name
+#columns: course.name, student.f_name, student.l_name, registration.grade, registration.student_id
+#values: A
+#Standardization: Show the name of course and full name of students, the condition is the course which most students got an A.
+#SQL-like: Show course.name, student.f_name, student.l_name, where registration.grade = 'A' , group by course.name, order by the number of T1.student_id
+
+/* extract and rewrite example */
+#question:How much more votes for episode 1 than for episode 5? more votes refers to SUBTRACT(SUM(votes when episode = 1), SUM(votes when episode = 5))
+SQL: SELECT SUM(CASE WHEN T1.episode = 1 THEN T2.votes ELSE 0 END) - SUM(CASE WHEN T1.episode = 5 THEN T2.votes ELSE 0 END) AS diff FROM Episode AS T1 INNER JOIN Vote AS T2 ON T2.episode_id = T1.episode_id;
+#reason: The question requires display in order: "How much more vote". The definition of "more vote" is SUBTRACT(SUM(votes when episode = 1), SUM(votes when episode = 5)). 1, 5 are filtering conditions.
+#SELECT: SUBTRACT(SUM(votes when episode = 1), SUM(votes when episode = 5))
+#columns: Episode.episode, Vote.votes
+#values:1, 5
+#Standardization: Show the number of votes by which the total votes for episode 1 exceed the total votes for episode 5.
+#SQL-like: Show SUBTRACT(SUM(votes when episode = 1), SUM(votes when episode = 5))
+
+/* extract and rewrite example */
+#question: What is the average score of the movie "The Fall of Berlin" in 2019? Average score refers to Avg(rating_score);
+SQL: SELECT SUM(T1.rating_score) / COUNT(T1.rating_id) FROM ratings AS T1 INNER JOIN movies AS T2 ON T1.movie_id = T2.movie_id WHERE T1.rating_timestamp_utc LIKE '2019%' AND T2.movie_title LIKE 'The Fall of Berlin'
+#reason: The question requires display in order: "average score". Average score is Avg(rating_score), "The Fall of Berlin",2019 are filtering conditions.
+#SELECT: Avg(rating_score)
+#columns: ratings.rating_score, ratings.rating_id, ratings.rating_timestamp_utc, movies.movie_title
+#values: The Fall of Berlin, 2019
+#Standardization: Show the average score of the movie "The Fall of Berlin" in 2019?
+#SQL-like: Show Avg(rating_score), where ratings.rating_timestamp_utc = 2019 and movies.movie_title = 'The Fall of Berlin'
+
+/* extract and rewrite example */
+#question: How many distinct orders were there in 2003 when the quantity ordered was less than 30? "year(orderDate) = '2003'; quantityOrdered < 30;"
+SQL: SELECT COUNT(DISTINCT T1.orderNumber) FROM orderdetails AS T1 INNER JOIN orders AS T2 ON T1.orderNumber = T2.orderNumber WHERE T1.quantityOrdered < 30 AND STRFTIME('%Y', T2.orderDate) = '2003'
+#reason:  The question requires display in order: "How many distinct orders"." in 2003", "less than 30" are filtering conditions.
+#SELECT: COUNT(DISTINCT orderdetails.orderNumber)
+#columns: orderdetails.orderNumber, orderdetails.quantityOrdered, orders.orderDate
+#values: 30, 2003
+#Standardization: Show the number of distinct orders, the condition is time in 2003 and quantity ordered was less than 30
+#SQL-like: Show COUNT(DISTINCT orderdetails.orderNumber), where orders.orderDate = 2003 and orderdetails.quantityOrdered < 30
+
+#Now, you need to process the question content based on the evidence and SQL:
+1. Standardize the question into a format that aligns more closely with SQL, in order to clearly reflect components: SELECT, WHERE, GROUP BY, ORDER BY, etc.
+2. provide the SQL query result set (the SELECT part in SQL, requested columns by the question), candidate columns for the question, and extract all values from the query according to the database information. Please list the query result set in the format of table.column after "#SELECT", list relevant candidate columns in the format of table.field after "#columns". List the values the question want to query after "#values". Use a comma "," to separate values and columns, and separate columns and values with a tab. The text format you will receive is ```question: {{question}}\evidence:{{define or evidence}}\nSQL:{{SQL}}\n#answer:```, and the output format you need to provide is #reason:{{why pick query, columns and values}}\n#SELECT:{{which to SELECT}}\n#columns:{{related columns}}\n#values:{{values}} #Standardization:{{standardize question}} #SQL-like:{{SQL-like question}}
+Now, you need to process the following text:
+
+#question: {question}
+SQL: {sql}
+#answer:
+"""
+
 
 select_prompt="""现在我们定义一个问句的语法原子单元如下:
 Q: 询问词: 如 calculate\ Include\ List\ List out\ List all\ give\ state\ Name\ In which\ How many\  which\ what\ who\ when\ provide\ Tally\ identify\ Find\ mention\ write等

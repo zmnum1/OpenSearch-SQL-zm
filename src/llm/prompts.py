@@ -1,6 +1,6 @@
 from llm import all_prompt
 
-class prompts_fewshot_parse:
+class prompts_fewshot_parse:## fewshot parse prompt
     parse_fewshot= all_prompt.prompts_fewshot_parse2
 
 class prompts1:

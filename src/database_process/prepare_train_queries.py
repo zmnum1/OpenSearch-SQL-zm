@@ -8,6 +8,23 @@ from llm.model import model_chose
 # 设置基本配置
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+def convert_table(s, sql):
+    l = re.findall(' ([^ ]*) +AS +([^ ]*)', sql)
+    for li in l:
+        s = s.replace(f" {li[1]}.", f" {li[0]}.")
+    return s
+
+def parse_ans(sql,ans):
+    ans = ans.replace('```\n','').replace('```','')
+    ans = convert_table(ans, sql)
+    reason=re.search("#reason:.*",ans).group()
+    column=re.search("#columns:.*",ans).group()
+    values=re.search("#values:.*",ans).group()
+    select=re.search("#SELECT:.*",ans).group()
+    sqllike="#SQL-Like:"+re.search("#SQL-[Ll]ike:(.*)",ans).groups()[0]
+    final_str="\n".join([reason,column,values,select,sqllike,f"#SQL: {sql}"])
+    return final_str
+
 def extract_ans(sql,ans):
     reason=re.search("#reason:.*",ans).group()
     column=re.search("#columns:.*",ans).group()
@@ -42,12 +59,12 @@ def prepare_train_queries(data_dir, new_train_dir, model, start=0, end=9427):
         for _ in range(3):  # Allow up to 3 attempts for each row
             try:
                 # Extract the question, evidence, and SQL command from the DataFrame
-                q, e, sql = df.iloc[i]['raw_question'], df.iloc[i]["evidence"], df.iloc[i]["SQL"]
+                q, e, sql = df.iloc[i]['question'], df.iloc[i]["evidence"], df.iloc[i]["SQL"]
                 # Call the model to parse the question and evidence, obtaining the content
                 content = model_chose("prepare_train_queries", model).fewshot_parse(q, e, sql)
                 # Store the parsed content and extracted answer in the DataFrame
-                df.loc[i, 'parse'] = content
-                df.loc[i, 'extract'] = extract_ans(sql, content)
+                df.loc[i, 'parse'] = content.strip()+"\n#SQL: "+sql### generate fewshot
+                df.loc[i, 'extract'] = extract_ans(sql, content)### extract fewshot
                 break  # Exit the retry loop if successful
             except Exception as e:
                 # Print an error message if processing fails
@@ -67,7 +84,7 @@ if __name__ == '__main__':
     parser.add_argument('--model',
                         type=str,
                         help='model',
-                        default="gpt-3.5-16K-1106")
+                        default="gpt-4o-mini-0718")
     parser.add_argument('--start',
                         type=int,
                         help='start_point',
