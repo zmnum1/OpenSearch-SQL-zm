@@ -56,6 +56,7 @@ class RunManager:
             dataset (List[Dict[str, Any]]): The dataset containing task information.
         """
         for i, data in enumerate(dataset):
+            print(data)
             if i < start:  # 跳过 start 之前的元素
                 continue
             if i >= end:  # 如果超过 end，停止处理
