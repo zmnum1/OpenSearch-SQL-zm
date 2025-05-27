@@ -25,7 +25,9 @@ def main(args):
     Main function to run the pipeline with the specified configuration.
     """
 ##
-    db_json=os.path.join(args.db_root_path,'data_preprocess',f'{args.data_mode}.json')
+    # db_json=os.path.join(args.db_root_path,'data_preprocess',f'{args.data_mode}.json')
+    db_json=os.path.join(args.db_root_path,f'bird_dev.json')
+
     
 
     dataset = load_dataset(db_json)
