@@ -9,8 +9,10 @@ from llm.model import model_chose
 from llm.db_conclusion import *
 import json
 
-import os
-os.environ["HF_ENDPOINT"] = "https://hf-mirror.com" # 使用清华大学镜像
+from huggingface_hub import configure_hf  # 新增关键配置
+
+# 关键步骤：在加载模型前设置镜像源
+configure_hf(mirror="https://hf-mirror.com")  # 使用清华大学镜像
 
 @node_decorator(check_schema_status=False)
 def generate_db_schema(task: Any, execution_history: Dict[str, Any]) -> Dict[str, Any]:
