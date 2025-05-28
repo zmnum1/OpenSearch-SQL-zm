@@ -27,7 +27,7 @@ def main(args):
 ##
     # db_json=os.path.join(args.db_root_path,'data_preprocess',f'{args.data_mode}.json')
     # args.db_root_path = 'D:\gitproject\OpenSearch-SQL-zm\Bird'
-    db_json=os.path.join(args.db_root_path,f'bird_dev.json')
+    db_json=os.path.join(args.db_root_path,'fewshot',f'questions.json')
 
     
 
