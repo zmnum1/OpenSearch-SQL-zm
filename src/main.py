@@ -26,6 +26,7 @@ def main(args):
     """
 ##
     # db_json=os.path.join(args.db_root_path,'data_preprocess',f'{args.data_mode}.json')
+    # args.db_root_path = 'D:\gitproject\OpenSearch-SQL-zm\Bird'
     db_json=os.path.join(args.db_root_path,f'bird_dev.json')
 
     
@@ -33,7 +34,7 @@ def main(args):
     dataset = load_dataset(db_json)
 
     run_manager = RunManager(args)
-    run_manager.initialize_tasks(args.start,args.end,dataset)
+    run_manager.initialize_tasks(args.start,args.end,dataset['questions'])
     run_manager.run_tasks()
     run_manager.generate_sql_files()
 
