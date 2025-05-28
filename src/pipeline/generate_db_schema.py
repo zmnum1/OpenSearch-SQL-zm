@@ -9,14 +9,14 @@ from llm.model import model_chose
 from llm.db_conclusion import *
 import json
 
-from huggingface_hub import configure_hf
+import os
+os.environ["HF_ENDPOINT"] = "https://hf-mirror.com" # 使用清华大学镜像
 
 @node_decorator(check_schema_status=False)
 def generate_db_schema(task: Any, execution_history: Dict[str, Any]) -> Dict[str, Any]:
     config,node_name=PipelineManager().get_model_para()
     paths=DatabaseManager()
     # 初始化模型
-    configure_hf(mirror="https://hf-mirror.com")  # 使用清华大学镜像
     bert_model = SentenceTransformer(config["bert_model"], device=config["device"])
 
     # 读取参数
